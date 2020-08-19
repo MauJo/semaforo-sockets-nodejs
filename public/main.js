@@ -1,46 +1,19 @@
-var socket = io.connect('https://prosemsoc.herokuapp.com/', { 'forceNew': true });
-
-socket.on('messages', function(data){
-    console.log(data);
-    render(data);
+// iniciando una conexión al servidor mediante socket
+var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
+// escuchando el socket, si recibe un mensaje con identificador messages recibo la data
+socket.on("messages", function (data) {
+  console.log(data);                                // imprime la data por consola
+  render(data);                                     // ejecuta la funcion render que modifica el front-end
 });
-
-//funcion para cambiar la clases del body
-function render(data){
-    var html = `<div>
-                  <strong>${data.color}</strong>
-                </div>`;
-    
-    document.getElementById('message').innerHTML = html;
-    document.getElementById('body').style.backgroundColor = data.color;
-
-
+// funcion para construir el html y el cambio de backgroundcolor en el body
+function render(data) {
+  var html =    `<div><strong>${data.color}</strong></div>`;
+  document.getElementById("message").innerHTML = html;
+  document.getElementById("body").style.backgroundColor = data.color; // establece el color del body
 }
-
-/*function render(data){
-    var html = data.map(function(elem, index){
-        return(`<div>
-                <strong>${elem.autor}</strong>:
-                <em>${elem.text}</em>
-                </div>`);
-    }).join(" ");
-      
-    document.getElementById('messages').innerHTML = html;
+// funcion que se ejecuta al pulsar los botones
+function funboton(valor) {
+  document.getElementById("body").style.backgroundColor = valor;    // establece el color del body
+  socket.emit("new-message", valor);                                // emite al servidor el nuevo valor
+  return false;
 }
-
-
-function addMessage(e){
-    var payload = {
-        autor: document.getElementById('username').value,
-        text: document.getElementById('texto').value
-    };
-    socket.emit('new-message', payload);
-    return false;
-
-}*/
-
-function funspecial(valor){
-    document.getElementById('body').style.backgroundColor = valor;
-    socket.emit('new-message', valor);
-    return false;
-};
