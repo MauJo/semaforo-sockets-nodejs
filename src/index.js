@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-
+app.set('port', process.env.PORT || 3000);
 
 var messages = { 
     color: "white"
@@ -27,7 +27,7 @@ io.on('connection', function(socket){
 });
 
 
-server.listen(3000, function() {
-    console.log('El servidor corriendo en http://localhost:3000');
+server.listen(app.get('port'), function() {
+    console.log('El servidor corriendo en puerto', app.get('port'));
 
 });
