@@ -1,5 +1,6 @@
-// iniciando una conexión al servidor mediante socket
-var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
+// iniciando una conexión mediante socket al servidor https://prosemsoc.herokuapp.com/
+//var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
+var socket = io.connect("http://localhost:3000/", { forceNew: true });
 // escuchando el socket, si recibe un mensaje con identificador messages recibo la data
 socket.on("messages", function (data) {
   console.log(data);                                // imprime la data por consola
