@@ -5,7 +5,7 @@ var server = require("http").Server(app);
 var io = require("socket.io")(server);
 
 // set de variable
-app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku
+app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku o 3000
 
 // objeto por defecto
 var messages = {
