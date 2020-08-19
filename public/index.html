@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hello!</title>
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    
+    <!-- script sockets.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+
+  </head>  
+  <body id="body" class="">
+    <h1>Hablame cara de chivo!</h1>
+    
+    <p>
+      Semaforo para probar conectividad.
+    </p>
+    <br>
+    <div id="message"></div>
+    
+    <div >
+      <button onclick="funspecial('green')" id="verde" class="button verde">Verde</button>
+      <button onclick="funspecial('yellow')" id="amarillo" class="button amarillo">Amarillo</button>   
+      <button onclick="funspecial('red')" id="rojo" class="button rojo">Rojo</button>   
+    </div>
+    
+
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <!--<script src="https://button.glitch.me/button.js" defer></script>-->
+  </body>
+
+</html>
