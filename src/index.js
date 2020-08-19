@@ -9,6 +9,7 @@ app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto de
 
 // objeto por defecto
 var messages = {
+  player: "1",
   color: "white",
 };
 
@@ -26,7 +27,9 @@ io.on("connection", function (socket) {
                                                         // el identificador messages
 
   socket.on("new-message", function (data) {            // si escucha en el socket un mensaje
-    messages.color = data;                              // con el identificador recibo en data y reemplazo el objeto
+    console.log(data);
+    messages.color = data.color;
+    messages.player = data.player;                              // con el identificador recibo en data y reemplazo el objeto                               // con el identificador recibo en data y reemplazo el objeto
     io.sockets.emit("messages", messages);              // emito el cambio a todos los clientes
   });
 });

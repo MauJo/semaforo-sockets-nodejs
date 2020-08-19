@@ -8,13 +8,30 @@ socket.on("messages", function (data) {
 });
 // funcion para construir el html y el cambio de backgroundcolor en el body
 function render(data) {
+	
   var html =    `<div><strong>${data.color}</strong></div>`;
-  document.getElementById("message").innerHTML = html;
-  document.getElementById("body").style.backgroundColor = data.color; // establece el color del body
+  var message = "message"+data.player;
+  var player = "player"+data.player;
+
+  //alert(player);
+  document.getElementById(message).innerHTML = html;
+  document.getElementById(player).style.backgroundColor = data.color; // establece el color del body
 }
 // funcion que se ejecuta al pulsar los botones
-function funboton(valor) {
-  document.getElementById("body").style.backgroundColor = valor;    // establece el color del body
-  socket.emit("new-message", valor);                                // emite al servidor el nuevo valor
+function funboton(valor, player) {
+	data = {
+		player: player,
+		color: valor,
+	}
+  document.getElementById("player"+player).style.backgroundColor = valor;    // establece el color del body
+  socket.emit("new-message", data);                                // emite al servidor el nuevo valor
   return false;
+}
+
+function funboton1(valor){
+	funboton(valor, "1");
+}
+
+function funboton2(valor){
+	funboton(valor, "2");
 }
