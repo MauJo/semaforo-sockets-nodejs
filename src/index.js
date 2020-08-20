@@ -12,8 +12,8 @@ app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto de
 
 // objeto por defecto
 var messages = {
-  player: "1",
   color: "white",
+  player: "1",
 };
 
 app.use(express.static("public"));
@@ -25,6 +25,10 @@ app.get("/", function (req, res) {
 // establecimiento de la conexion
 io.on("connection", function (socket) { // si alguien se conecta recibo la conexión socket
   console.log("Alguien se conectó con socket: "+socket.id);    // si alguien se conecta se imprime por consola el id
+  /*var messages = {
+    id: socket.id,
+    player: "Conexión establecida",
+  };*/
   socket.emit("messages", messages);                    // se le envía el objeto por defecto con el identificador messages
                                                         
 

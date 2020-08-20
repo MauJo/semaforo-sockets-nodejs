@@ -1,8 +1,10 @@
 // iniciando una conexión mediante socket al servidor https://prosemsoc.herokuapp.com/
 //var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
-var socket = io.connect("192.168.0.4:3000/", { forceNew: true });
+var socket = io.connect("http://localhost:3000/", { forceNew: true });
+
 // escuchando el socket, si recibe un mensaje con identificador messages recibo la data
 socket.on("messages", function (data) {
+  console.log("Me conecté con socket: "+socket.id);
   console.log(data);                                // imprime la data por consola
   render(data);                                     // ejecuta la funcion render que modifica el front-end
 });
@@ -22,7 +24,7 @@ function funboton(valor, player) {
 	data = {
 		player: player,
 		color: valor,
-	}
+	} 
   document.getElementById("player"+player).style.backgroundColor = valor;    // establece el color del body
   socket.emit("new-message", data);                                // emite al servidor el nuevo valor
   return false;
