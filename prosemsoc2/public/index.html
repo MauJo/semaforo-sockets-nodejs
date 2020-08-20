@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello!</title>
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css" />
+    <!-- script sockets.io y main.js -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+  </head>
+  <body id="body">
+    <h1>Hablame cara de chivo!</h1>
+    <p>
+      Semaforo para probar conectividad.
+    </p>
+    <br />
+    <div id="message"></div>
+    <div>
+      <button onclick="funboton('green')" class="button verde">Verde</button>
+      <button onclick="funboton('yellow')" class="button amarillo">Amarillo</button>
+      <button onclick="funboton('red')" class="button rojo">Rojo</button>
+    </div>
+  </body>
+</html>
