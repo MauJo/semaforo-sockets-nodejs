@@ -23,15 +23,18 @@ app.get("/", function (req, res) {
 });
 
 // establecimiento de la conexion
-io.on("connection", function (socket) {
-                                                        // si alguien se conecta recibo la conexión socket
-  console.log("Alguien se conectó con socket: "+socket.id);    // si alguien se conecta se imprime por consola
-  socket.emit("messages", messages);                    // se le envía el objeto por defecto con
-                                                        // el identificador messages
+io.on("connection", function (socket) { // si alguien se conecta recibo la conexión socket
+  console.log("Alguien se conectó con socket: "+socket.id);    // si alguien se conecta se imprime por consola el id
+  socket.emit("messages", messages);                    // se le envía el objeto por defecto con el identificador messages
+                                                        
 
-  socket.on("new-message", function (messages) {            // si escucha en el socket un mensaje
-    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }");             // con el identificador recibo en data y reemplazo el objeto                               // con el identificador recibo en data y reemplazo el objeto
+  socket.on("new-message", function (messages) { // si escucha en el socket un mensaje
+    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }");             // ID y mensaje                             // con el identificador recibo en data y reemplazo el objeto
     io.sockets.emit("messages", messages);              // emito el cambio a todos los clientes
+  });
+
+  socket.on('disconnecting', (reason) => { //identifica cuando se a desconectado
+    console.log("*"+socket.id+" = Se desconecto*, reason -> "+reason); //ID y razon de desconeccion   
   });
 });
 
