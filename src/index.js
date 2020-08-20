@@ -42,15 +42,14 @@ io.on("connection", function (socket) { // si alguien se conecta recibo la conex
   }else{
     messages.player = 2;
   }
-  socket.emit("numeroplayer", messages);                    // se le envía el objeto por defecto con el identificador messages                                                      
-  //socket.emit("messages", messages);                    // se le envía el objeto por defecto con el identificador messages                                                     
-  //socket.to(socket.id).emit("playernumber", messages.player);
+
+  socket.emit("numeroplayer", messages); // se le envía el objeto por defecto con el identificador messages                                                      
+  
   ////////comunicacion con el usuario
-  socket.on("new-message", function (messages) { // si escucha en el socket un mensaje
-    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }");             // ID y mensaje
+  socket.on("new-message", function (messages) { // si escucha en el socket un mensaje nuevo
+    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }"); // ID y mensaje
     //io.sockets.emit("messages", messages);              // emito el cambio a todos los clientes
     var player = playersMap[socket.id];
-    var rival = "";
     if(playersMap[socket.id]%2 == 0){
       player++;
       messages.player = 1;
@@ -58,9 +57,10 @@ io.on("connection", function (socket) { // si alguien se conecta recibo la conex
       player--;
       messages.player = 2;
     }
-    rival = playersArray[player];
+    var rival = playersArray[player];
     console.log(" -> Rival: "+rival);             // ID y mensaje
-    socket.to(socket.id).to(rival).emit("messages", messages);
+    
+    socket.to(socket.id).to(rival).emit("messages", messages); //Le envia elmensaje a los dos players
   });
 
   ////////desconeccion del usuario
