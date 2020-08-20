@@ -7,6 +7,9 @@ var io = require("socket.io")(server);
 // set de variable
 app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku o 3000
 
+//variables glovales
+
+
 // objeto por defecto
 var messages = {
   player: "1",
@@ -22,14 +25,12 @@ app.get("/", function (req, res) {
 // establecimiento de la conexion
 io.on("connection", function (socket) {
                                                         // si alguien se conecta recibo la conexión socket
-  console.log("Alguien se ha conectado con socket");    // si alguien se conecta se imprime por consola
+  console.log("Alguien se conectó con socket: "+socket.id);    // si alguien se conecta se imprime por consola
   socket.emit("messages", messages);                    // se le envía el objeto por defecto con
                                                         // el identificador messages
 
-  socket.on("new-message", function (data) {            // si escucha en el socket un mensaje
-    console.log(data);
-    messages.color = data.color;
-    messages.player = data.player;                              // con el identificador recibo en data y reemplazo el objeto                               // con el identificador recibo en data y reemplazo el objeto
+  socket.on("new-message", function (messages) {            // si escucha en el socket un mensaje
+    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }");             // con el identificador recibo en data y reemplazo el objeto                               // con el identificador recibo en data y reemplazo el objeto
     io.sockets.emit("messages", messages);              // emito el cambio a todos los clientes
   });
 });
