@@ -6,9 +6,21 @@ var io = require("socket.io")(server);
 
 // set de variable
 app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku o 3000
+//constantes
 
 // variables globales
+var contador = 0;
+
+// arrays
+var playersMap = [];
+var playersArray = [];
 var aux = []; // arreglo que se utilizará para almacenar objetos json
+
+// objeto por defecto
+var messages = {
+  player: "1",
+  color: "white",
+};
 
 app.use(express.static("public"));
 
@@ -26,10 +38,39 @@ io.on("connection", function (socket) {
     id: socket.id,
     dato: "conexion establecida",
     player: 1,
+    color: "white",
   };
+
+  //añade el usuario a la lista de players en vector y diccionario
+  playersMap[socket.id] = contador++;
+  playersArray.push(socket.id);
+  console.log(playersArray[contador-1]+" -> player numero: "+playersMap[socket.id]);             // Indice y numero de jugador
+  
+  if(playersMap[socket.id]%2 == 0){
+    saludo.player = 1;
+  }else{
+    saludo.player = 2;
+  }
   socket.emit("saludo", saludo); // se le envía el objeto saludo por defecto
 
-  socket.on("res-message", function (data) { // se reciben del cliente los msjs con identificador res-message
+
+  socket.on("res-message", function (messages) { // se reciben del cliente los msjs con identificador res-message
+    
+    console.log(socket.id + " -> { player: " + messages.player + ", color: " + messages.color + " }");
+    var player = playersMap[socket.id];
+    var rival = "";
+    if(playersMap[socket.id]%2 == 0){
+      player++;
+      messages.player = 1;
+    }else{
+      player--;
+      messages.player = 2;
+    }
+    rival = playersArray[player];
+    console.log(" -> Rival: "+ rival);             // ID y mensaje
+    socket.to(socket.id).to(rival).emit("messages", data);
+  });
+
     socket.emit("message", data); // se utiliza para enviar mensaje al cliente
   });  
   
@@ -49,7 +90,7 @@ io.on("connection", function (socket) {
   socket.on("disconnecting", (reason) => {
     console.log("*" + socket.id + " = Se desconecto*, reason -> " + reason); //ID y razon de desconeccion
   });
-});
+
 
 // escucha peticiones en el puerto
 server.listen(app.get("port"), function () {

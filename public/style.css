@@ -7,6 +7,10 @@ h1 {
   font-style: italic;
   color: #373fff;
 }
+#player1, #player2{
+  padding: 15px 32px;
+}
+
 .button {
   border: outset;
   color: white;
