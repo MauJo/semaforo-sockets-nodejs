@@ -58,7 +58,6 @@ io.on("connection", function (socket) {
     
     console.log(socket.id + " -> { player: " + messages.player + ", color: " + messages.color + " }");
     var player = playersMap[socket.id];
-    var rival = "";
     if(playersMap[socket.id]%2 == 0){
       player++;
       messages.player = 1;
@@ -66,9 +65,9 @@ io.on("connection", function (socket) {
       player--;
       messages.player = 2;
     }
-    rival = playersArray[player];
-    console.log(" -> Rival: "+ rival);             // ID y mensaje
-    socket.to(socket.id).to(rival).emit("messages", data);
+    var rival = playersArray[player];
+    console.log(" -> Rival: "+ rival);            
+    socket.to(socket.id).to(rival).emit("messages", data); //Le envia elmensaje a los dos players
   });
 
     socket.emit("message", data); // se utiliza para enviar mensaje al cliente

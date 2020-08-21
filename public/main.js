@@ -5,6 +5,7 @@
 var socket = io.connect("http://localhost:3000/", { forceNew: true });
 
 console.log(socket); //cesar 
+var playerNumber = "";
 
 // escuchando el socket, si recibe un mensaje con identificador saludo recibo el json
 socket.on("saludo", function (data) {
@@ -14,9 +15,9 @@ socket.on("saludo", function (data) {
   );
   console.log(data); // imprime el json por consola
 
-  playerNumber = data.player; //cesar
-  
+  playerNumber = data.player; //inicializa el player como 1 o 2
   renderArray([data]); // renderiza por pantalla el json recibido
+  render(data);
   console.log("Se responde con el mismo json y solicitando Broadcast");
   socket.emit("broadcast", data);
   // para este msj se utiliza el identificador broadcast para indicarle al servidor que haga difusión del mismo
@@ -56,11 +57,11 @@ function renderArray(data) {
 }  
 
 // funcion que se ejecuta al pulsar los botones
-function funboton(valor, player) {
+function funboton(valor) {
 	data = {
     id: socket.id,
     dato: "conexion establecida",
-		player: player,
+		player: 1,
 		color: valor,
 	}
   document.getElementById("player"+playerNumber).style.backgroundColor = valor;    // establece el color del body
