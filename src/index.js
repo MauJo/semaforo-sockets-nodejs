@@ -6,27 +6,32 @@ var io = require("socket.io")(server);
 
 // set de variable
 app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku o 3000
-//constantes
+///////////////////////////////////////////////////////////////////////////////
+// CONSTANTES
 
-// variables globales
+///////////////////////////////////////////////////////////////////////////////
+// VARIABLES GLOVALES
 var contador = 0;
 
-// arrays
+///////////////////////////////////////////////////////////////////////////////
+// ARRAYS GLOVALES
 var playersMap = [];
 var playersArray = [];
 var usuarios_conectados = []; // arreglo que se utilizará para almacenar objetos json
 
-// objeto por defecto
-var messages = {
-  player: "1",
-  color: "white",
-};
+///////////////////////////////////////////////////////////////////////////////
+// OBJETOS GLOVALES
+
+///////////////////////////////////////////////////////////////////////////////
 
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
   res.status(200).send("Hello Mundo!");
 });
+
+///////////////////////////////////////////////////////////////////////////////
+// SOCKETS
 
 // establecimiento de la conexion
 io.on("connection", function (socket) {
@@ -50,9 +55,10 @@ io.on("connection", function (socket) {
   }else{
     saludo.player = 2;
   }
+  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
   socket.emit("saludo", saludo); // se le envía el objeto saludo por defecto
 
-
+//---------------------------------------------------------------------------//
   socket.on("res-message", function (messages) { // se reciben del cliente los msjs con identificador res-message
     
     console.log(socket.id + " -> { player: " + messages.player + ", color: " + messages.color + " }");
@@ -65,11 +71,13 @@ io.on("connection", function (socket) {
       messages.player = 2;
     }
     var rival = playersArray[player];
-    console.log(" -> Rival: "+ rival);            
-    socket.to(socket.id).to(rival).emit("messages", messages); //Le envia elmensaje a los dos players
-    socket.emit("message", messages); // se utiliza para enviar mensaje al cliente 
+    console.log(" -> Rival: "+ rival);    
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//    
+    socket.to(socket.id).to(rival).emit("message", messages); //Le envia el mensaje a los dos players
+
   });
   
+//---------------------------------------------------------------------------//
   socket.on("broadcast", function (data) {
     // se escucha en el socket un mensaje con solicitud de broadcast
     console.log(
@@ -82,6 +90,7 @@ io.on("connection", function (socket) {
     io.sockets.emit("broadcast", usuarios_conectados); // lo logico sería reenviarlo con la misma identificación a todos los clientes
   });
 
+//---------------------------------------------------------------------------//
   // identifica cuando se ha desconectado un cliente
   socket.on("disconnecting", (reason) => {
     console.log("*" + socket.id + " = Se desconecto*, reason -> " + reason); //ID y razon de desconeccion
@@ -95,9 +104,10 @@ io.on("connection", function (socket) {
       io.sockets.emit("broadcast", usuarios_conectados);
   });
 }); 
+///////////////////////////////////////////////////////////////////////////////
+// FUNCIONES
 
-
-
+///////////////////////////////////////////////////////////////////////////////
 // escucha peticiones en el puerto
 server.listen(app.get("port"), function () {
   console.log("El servidor esta corriendo en el puerto", app.get("port"));
