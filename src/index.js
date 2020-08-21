@@ -7,14 +7,8 @@ var io = require("socket.io")(server);
 // set de variable
 app.set("port", process.env.PORT || 3000); // process.env.PORT usar el puerto designado por heroku o 3000
 
-//variables glovales
-
-
-// objeto por defecto
-var messages = {
-  color: "white",
-  player: "1",
-};
+// variables globales
+var aux = []; // arreglo que se utilizará para almacenar objetos json
 
 app.use(express.static("public"));
 
@@ -23,26 +17,41 @@ app.get("/", function (req, res) {
 });
 
 // establecimiento de la conexion
-io.on("connection", function (socket) { // si alguien se conecta recibo la conexión socket
-  console.log("Alguien se conectó con socket: "+socket.id);    // si alguien se conecta se imprime por consola el id
-  /*var messages = {
+io.on("connection", function (socket) {
+  // si alguien se conecta recibo la conexión socket
+  console.log(
+    "Se conectaron por socket. Su id: " + socket.id + " enviando saludo..."
+  );
+  var saludo = {
     id: socket.id,
-    player: "Conexión establecida",
-  };*/
-  socket.emit("messages", messages);                    // se le envía el objeto por defecto con el identificador messages
-                                                        
+    dato: "conexion establecida",
+    player: 1,
+  };
+  socket.emit("saludo", saludo); // se le envía el objeto saludo por defecto
 
-  socket.on("new-message", function (messages) { // si escucha en el socket un mensaje
-    console.log(socket.id+" -> { player: "+messages.player+", color: "+messages.color+" }");             // ID y mensaje                             // con el identificador recibo en data y reemplazo el objeto
-    io.sockets.emit("messages", messages);              // emito el cambio a todos los clientes
+  socket.on("res-message", function (data) { // se reciben del cliente los msjs con identificador res-message
+    socket.emit("message", data); // se utiliza para enviar mensaje al cliente
+  });  
+  
+  socket.on("broadcast", function (data) {
+    // se escucha en el socket un mensaje con solicitud de broadcast
+    console.log(
+      "Respondio con json: id: " + data.id + ", dato: " + data.dato + " , player: " + data.player
+    );
+    aux.push(data); // acumula los json recibidos en el arreglo aux
+    console.log(
+      "El cliente solicito que se haga Broadcast del json recibido..." // cliente envio msj con identificación "broadcast"
+    );
+    io.sockets.emit("broadcast", aux); // lo logico sería reenviarlo con la misma identificación a todos los clientes
   });
 
-  socket.on('disconnecting', (reason) => { //identifica cuando se a desconectado
-    console.log("*"+socket.id+" = Se desconecto*, reason -> "+reason); //ID y razon de desconeccion   
+  // identifica cuando se ha desconectado un cliente
+  socket.on("disconnecting", (reason) => {
+    console.log("*" + socket.id + " = Se desconecto*, reason -> " + reason); //ID y razon de desconeccion
   });
 });
 
 // escucha peticiones en el puerto
 server.listen(app.get("port"), function () {
-  console.log("El servidor corriendo en puerto", app.get("port"));
+  console.log("El servidor esta corriendo en el puerto", app.get("port"));
 });

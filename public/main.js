@@ -2,38 +2,39 @@
 //var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
 var socket = io.connect("http://localhost:3000/", { forceNew: true });
 
-// escuchando el socket, si recibe un mensaje con identificador messages recibo la data
-socket.on("messages", function (data) {
-  console.log("Me conecté con socket: "+socket.id);
-  console.log(data);                                // imprime la data por consola
-  render(data);                                     // ejecuta la funcion render que modifica el front-end
+// escuchando el socket, si recibe un mensaje con identificador saludo recibo el json
+socket.on("saludo", function (data) {
+  console.clear();
+  console.log(
+    "Me conecte por socket con id: " + socket.id + " respondio con el json:"
+  );
+  console.log(data); // imprime el json por consola
+  render([data]); // renderiza por pantalla el json recibido
+  console.log("Se responde con el mismo json y solicitando Broadcast");
+  socket.emit("broadcast", data);
+  // para este msj se utiliza el identificador broadcast para indicarle al servidor que haga difusión del mismo
 });
-// funcion para construir el html y el cambio de backgroundcolor en el body
+socket.on("message", function (data) {   // se reciben del servidor los msjs con identificador message
+  socket.emit("res-message", data); // se utiliza para responderle al servidor
+});
+socket.on("broadcast", function (data) {
+  // se reciben los msjs Broadcast enviados desde otros clientes
+  console.log("Se recibio Broadcast:");
+  console.log(data); // se muestra el json o arreglo de json recibidos del servidor
+  render(data); // se renderiza el arreglo por pantalla
+});
+
+// funcion para construir el html
 function render(data) {
-	
-  var html =    `<div><strong>${data.color}</strong></div>`;
-  var message = "message"+data.player;
-  var player = "player"+data.player;
-
-  //alert(player);
-  document.getElementById(message).innerHTML = html;
-  document.getElementById(player).style.backgroundColor = data.color; // establece el color del body
-}
-// funcion que se ejecuta al pulsar los botones
-function funboton(valor, player) {
-	data = {
-		player: player,
-		color: valor,
-	} 
-  document.getElementById("player"+player).style.backgroundColor = valor;    // establece el color del body
-  socket.emit("new-message", data);                                // emite al servidor el nuevo valor
-  return false;
-}
-
-function funboton1(valor){
-	funboton(valor, "1");
-}
-
-function funboton2(valor){
-	funboton(valor, "2");
+  var html = data
+    .map(function (elem, index) {
+      // recorre un arreglo con elementos json
+      return `<div> 
+              <strong>id: </strong>${elem.id}
+              <strong> Dato: </strong>${elem.dato}
+              <strong> Player: </strong>${elem.player}
+              </div>`;
+    })
+    .join(" ");
+  document.getElementById("messages").innerHTML = html;
 }
