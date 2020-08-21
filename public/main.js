@@ -45,9 +45,10 @@ function render(data){
 }
 
 function renderArray(data) {
-  var html = data.map(function (elem, index) {
-      // recorre un arreglo con elementos json
-      return `<div> 
+  var html = data.map(function (elem, index) {// recorre un arreglo con elementos json
+            var aux = null;
+      (socket.id == elem.id) ? aux = 'style="background-color: #00FFFF;"' : aux = null; // identificacion visual de tu usuario
+      return `<div ${aux}> 
               <strong>id: </strong>${elem.id}
               <strong> Dato: </strong>${elem.dato}
               <strong> Player: </strong>${elem.player}

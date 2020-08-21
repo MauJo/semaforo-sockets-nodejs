@@ -14,7 +14,7 @@ var contador = 0;
 // arrays
 var playersMap = [];
 var playersArray = [];
-var aux = []; // arreglo que se utilizará para almacenar objetos json
+var usuarios_conectados = []; // arreglo que se utilizará para almacenar objetos json
 
 // objeto por defecto
 var messages = {
@@ -31,9 +31,8 @@ app.get("/", function (req, res) {
 // establecimiento de la conexion
 io.on("connection", function (socket) {
   // si alguien se conecta recibo la conexión socket
-  console.log(
-    "Se conectaron por socket. Su id: " + socket.id + " enviando saludo..."
-  );
+  console.log(">----------------------------------------------------<");
+  console.log("Se conectaron por socket. Su id: " + socket.id + " enviando saludo...");
   var saludo = {
     id: socket.id,
     dato: "conexion establecida",
@@ -67,28 +66,36 @@ io.on("connection", function (socket) {
     }
     var rival = playersArray[player];
     console.log(" -> Rival: "+ rival);            
-    socket.to(socket.id).to(rival).emit("messages", data); //Le envia elmensaje a los dos players
+    socket.to(socket.id).to(rival).emit("messages", messages); //Le envia elmensaje a los dos players
+    socket.emit("message", messages); // se utiliza para enviar mensaje al cliente 
   });
-
-    socket.emit("message", data); // se utiliza para enviar mensaje al cliente
-  });  
   
   socket.on("broadcast", function (data) {
     // se escucha en el socket un mensaje con solicitud de broadcast
     console.log(
       "Respondio con json: id: " + data.id + ", dato: " + data.dato + " , player: " + data.player
     );
-    aux.push(data); // acumula los json recibidos en el arreglo aux
+    usuarios_conectados.push(data); // acumula los json recibidos en el arreglo usuarios_conectados
     console.log(
       "El cliente solicito que se haga Broadcast del json recibido..." // cliente envio msj con identificación "broadcast"
     );
-    io.sockets.emit("broadcast", aux); // lo logico sería reenviarlo con la misma identificación a todos los clientes
+    io.sockets.emit("broadcast", usuarios_conectados); // lo logico sería reenviarlo con la misma identificación a todos los clientes
   });
 
   // identifica cuando se ha desconectado un cliente
   socket.on("disconnecting", (reason) => {
     console.log("*" + socket.id + " = Se desconecto*, reason -> " + reason); //ID y razon de desconeccion
+      // codigo para eliminar a la gente que se desconecta y sale del arreglo usuario_conectados
+      usuarios_conectados.map( function(elem, index) {
+        if ( socket.id == elem.id ) {
+          pos = index;
+        }
+      });    
+      usuarios_conectados.splice(pos, 1);    
+      io.sockets.emit("broadcast", usuarios_conectados);
   });
+}); 
+
 
 
 // escucha peticiones en el puerto
