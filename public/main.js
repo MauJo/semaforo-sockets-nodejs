@@ -1,9 +1,14 @@
-//import socket from 'import';
+//import {urlServer} from './import';
+//import * from 'import.js';
+//import 'import.js';
 
-// iniciando una conexión mediante socket al servidor https://prosemsoc.herokuapp.com/
-//var socket = io.connect("https://prosemsoc.herokuapp.com/", { forceNew: true });
-//var socket = io.connect("http://localhost:3000/", { forceNew: true });
-var socket = io.connect("192.168.0.4:3000/", { forceNew: true });
+//const urlServer = "https://prosemsoc.herokuapp.com/";
+const urlServer = "192.168.0.4:3000/";
+
+//alert(urlServer);
+
+var socket = io.connect(urlServer, { forceNew: true });
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CONSTANTES
@@ -11,7 +16,7 @@ var socket = io.connect("192.168.0.4:3000/", { forceNew: true });
 ///////////////////////////////////////////////////////////////////////////////
 // VARIABLES GLOVALES
 var playerNumber = "";
-
+//var socket = socket2;
 ///////////////////////////////////////////////////////////////////////////////
 // ARRAYS GLOVALES
 
