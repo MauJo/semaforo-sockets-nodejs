@@ -1,13 +1,9 @@
-//import {urlServer} from './import';
-//import * from 'import.js';
-//import 'import.js';
 
-//const urlServer = "https://prosemsoc.herokuapp.com/";
-const urlServer = "192.168.0.4:3000/";
+import urlSocket from './imports.js';
 
-//alert(urlServer);
+console.log("URL socket: "+urlSocket);
 
-var socket = io.connect(urlServer, { forceNew: true });
+var socket = io.connect(urlSocket, { forceNew: true });
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +25,7 @@ var playerNumber = "";
 //---------------------------------------------------------------------------//
 // escuchando el socket, si recibe un mensaje con identificador saludo recibo el json
 socket.on("saludo", function (data) {
-  console.clear();
+  //console.clear();
   console.log(
     "Me conecte por socket con id: " + socket.id + " respondio con el json:"
   );
