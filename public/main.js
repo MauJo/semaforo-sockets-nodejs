@@ -1,7 +1,9 @@
 
-import urlSocket from './imports.js';
+//import urlSocket from './imports.js';
 
 console.log("URL socket: "+urlSocket);
+
+var urlSocket = "192.168.0.4:3000/";
 
 var socket = io.connect(urlSocket, { forceNew: true });
 
@@ -81,13 +83,28 @@ function renderArray(data) {
 }  
 //---------------------------------------------------------------------------//
 // funcion que se ejecuta al pulsar los botones
+
 function funboton(valor) {
-	data = {
+	var data = {
 		player: playerNumber,
 		color: valor,
 	}
   render(data);
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
   socket.emit("res-message", data);                                // emite al servidor el nuevo valor
-  return false;
 }
+
+
+$("#verde").on('click',function(e) {
+  e.preventDefault();
+  funboton("green");
+});
+
+$("#amarillo").on('click',function(e) {
+  e.preventDefault();
+  funboton("yellow");
+});
+$("#rojo").on('click',function(e) {
+  e.preventDefault();
+  funboton("red"); 
+});
